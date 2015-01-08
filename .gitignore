@@ -1,0 +1,4 @@
+
+.tox
+*.pyc
+dumb.egg-info/
