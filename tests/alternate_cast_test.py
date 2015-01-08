@@ -53,7 +53,8 @@ class Objuni(object):
 strings = ['a normal string', u'B\xe9l', u'ééééééé', 'é', u'é'.encode('utf-8'),]
 
 @pytest.mark.parametrize('alternate_cast', [alternate_cast])
-@pytest.mark.parametrize('string', strings + list(map(Objstr, strings)))
+@pytest.mark.parametrize('string', strings + list(map(Objstr, strings)) +
+                         list(map(Objuni, strings)))
 def test_that_string_is_equivalent_to_string_cast(string, alternate_cast):
     try:
         alternate_cast(string)
