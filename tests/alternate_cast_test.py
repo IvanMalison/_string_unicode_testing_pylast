@@ -29,20 +29,42 @@ def alternate_cast(string):
         casted = casted.encode("utf-8")
     return casted
 
+
+
+class Objstr(object):
+
+    def __init__(self, item):
+        self.item = item
+
+    def __str__(self):
+        return self.item
+
+class Objuni(object):
+
+    def __init__(self, item):
+        self.item = item
+
+    def __unicode__(self):
+        return self.item
+
+
+
+
+strings = ['a normal string', u'B\xe9l', u'ééééééé', 'é', u'é'.encode('utf-8'),]
+
 @pytest.mark.parametrize('alternate_cast', [alternate_cast])
-@pytest.mark.parametrize('string', ['a normal string', u'B\xe9l', u'ééééééé', 'é',
-                                    u'é'.encode('utf-8')])
+@pytest.mark.parametrize('string', strings + list(map(Objstr, strings)))
 def test_that_string_is_equivalent_to_string_cast(string, alternate_cast):
     try:
         alternate_cast(string)
-    except (UnicodeDecodeError, UnicodeEncodeError) as e:
-        # Make sure that _string also fails
-        with pytest.raises(type(e)):
+    except Exception as e:
+        # Make sure that _string also fails if alternate_cast did
+        with pytest.raises(Exception):
             _string(string)
-        return 
+        return
     try:
         _string_result = _string(string)
-    except (UnicodeDecodeError, UnicodeEncodeError):
+    except Exception:
         pass
     else:
         assert _string_result == alternate_cast(string)
